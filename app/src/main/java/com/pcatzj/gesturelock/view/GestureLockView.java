@@ -410,7 +410,7 @@ public class GestureLockView extends View {
     private void setGestureResult(@ColorInt int color) {
         mPaint.setColor(color);
 
-        // 设置自动清楚
+        // 设置自动清除
         if (mDurationErrorPatternDisappear == 0) {
             resetState();
         } else if (mDurationErrorPatternDisappear > 0) {
