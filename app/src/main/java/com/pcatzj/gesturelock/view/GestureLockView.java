@@ -107,6 +107,7 @@ public class GestureLockView extends View {
 
     private int mGestureMode = GestureMode.MODE_TRAVERSER;
     private int mVerifyTimes = 2;
+    private int mTempVerifyTimes = mVerifyTimes;
 
     private Paint mPaint;
 
@@ -684,7 +685,19 @@ public class GestureLockView extends View {
      */
     public void setModeCreator(int verifyTimes) {
         mGestureMode = GestureMode.MODE_CREATOR;
+        mTempVerifyTimes = verifyTimes;
         mVerifyTimes = verifyTimes;
+    }
+
+    /**
+     * 创建手势密码阶段，第一次已经设置了手势密码，调用此方法，可以重置状态，从第一次开始输入
+     */
+    public void resetCreatorState() {
+        if (mGestureMode != GestureMode.MODE_CREATOR) {
+            return;
+        }
+        mTempPassword = null;
+        mVerifyTimes = mTempVerifyTimes;
     }
 
     /**
