@@ -272,6 +272,8 @@ public class GestureLockView extends View {
         mWidth = MeasureSpec.getSize(widthMeasureSpec);
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
 
+        mWidth = mHeight = Math.min(mWidth, mHeight);
+
         setPaddingValue();
 
         int modeWidth  = MeasureSpec.getMode(widthMeasureSpec);
@@ -456,7 +458,6 @@ public class GestureLockView extends View {
      * 计算各种参数数值
      */
     private void calculateValues() {
-        mWidth = mHeight = Math.min(mWidth, mHeight);
         mLockWidth = mLockHeight = Math.max(mLockHeight, mLockWidth);
         mSpaceHorizontal = (mWidth - mLockWidth * mCountSide - mPaddingLeft - mPaddingRight)
                         / (mCountSide - 1);
@@ -571,7 +572,7 @@ public class GestureLockView extends View {
         }
 
         invalidate();
-        // 设置自动清楚
+        // 设置自动清除
         if (mDurationPatternDisappear == 0) {
             resetState();
         } else if (mDurationPatternDisappear > 0) {
@@ -660,7 +661,7 @@ public class GestureLockView extends View {
      * @param password 密码（各点坐标的横纵坐标值按顺序拼接）
      *                 当调用此方法时，手势图案即变为不自动消失模式
      */
-    public void setPreviewMode(String password) {
+    public void setModePreview(String password) {
         mTouchable = false;
         resetState();
         for (int i = 0; i < password.length(); i += 2) {
