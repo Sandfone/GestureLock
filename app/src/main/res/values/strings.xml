@@ -3,4 +3,5 @@
 
     <string name="create_gesture_password">创建手势密码</string>
     <string name="verify_gesture_password">验证手势密码</string>
+    <string name="reset">重置</string>
 </resources>
