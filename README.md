@@ -1,10 +1,24 @@
+# 自定义view--手势密码
+
+
+
+###### 项目地址：https://github.com/pcatzj/GestureLock
+
+
+
+### 效果和预览
+
 之前项目里新需求需要增加手势密码锁功能，正好当时不是很忙，就自己写了一个。大致也测试了一段时间，现在记录一下。
 
 首先是效果图
 
-![](https://ooo.0o0.ooo/2017/06/14/5940df7d9683d.gif)
+![](https://ooo.0o0.ooo/2017/06/16/594335739b5e9.gif)
 
 
+
+
+
+### 自定义属性
 
 思路就是监听onTouch事件，然后手动刷新视图，在onDraw回调里绘制画面。
 
@@ -121,6 +135,10 @@ public GestureLockView(Context context, @Nullable AttributeSet attrs) {
         init();
     }
 ```
+
+
+
+### view的属性配置和绘制
 
 下面就是根据定制属性来绘制view了
 
@@ -279,3 +297,67 @@ public GestureLockView(Context context, @Nullable AttributeSet attrs) {
     }
 ```
 
+
+
+### 回调函数
+
+下面是回调函数的定义和调用
+
+定义的回调接口
+
+```java
+public interface GestureEvent {
+        int AUTHORITY_NOT_EXACTLY = 0x001;
+        int AUTHORITY_EXACTLY = 0x002;
+
+        int CREATE_NOT_SAME_AS_FIRST_TIMES = 0x011;
+        int CREATE_CHECK_POINT_NOT_ENOUGH = 0x012;
+
+        void onGestureAuthority(int authority);
+
+        void onGestureCreate(int create);
+
+        void onGestureCreateSuccessful(String password);
+
+        void onGestureCreateEffective(int leftSteps, String password);
+
+        boolean verifyPassword(String password);
+
+    }
+```
+
+接口定义了5个方法，但是，其实是有8个回调。
+
+下面依次介绍一下
+
+- `void onGestureAuthority(int authority)` 手势密码验证阶段的回调，其中参数有两个选项——`AUTHORITY_NOT_EXACTLY`和 `AUTHORITY_EXACTLY`，分别代表“密码不正确”和“密码正确”。
+- `void onGestureCreate(int create)` 手势密码创建阶段的回调，其中参数有两个选项——`CREATE_NOT_SAME_AS_FIRST_TIMES`和 `CREATE_CHECK_POINT_NOT_ENOUGH`，分别代表“手势密码创建成功”、“密码和第一次输入不同”以及“连接点数少于设定的最少连接点数”。
+- `void onGestureCreateSuccessful(String password)` 手势密码创建成功的回调，参数表示已成功创建的手势点阵密码按照坐标拼接的一串数字密码。
+- `void onGestureCreateEffective(int leftSteps, String password)` 手势密码创建阶段分部回调，即创建密码时每一次生效（连接点数不少于设定的最少连接点数）都会进行此回调，参数`leftSteps` 表示剩余的所需创建步数，`password` 为第一次输入的点阵密码按照坐标拼接的一串数字密码。在这里可以加入存储密码的逻辑。
+- `boolean verifyPassword(String password)` 验证密码是否正确的回调，这是一个有返回值的回调方法。返回值为用户输入的验证密码是否和设定的密码匹配，如果匹配，则返回`true`， 否则返回`false`。参数表示用户输入的验证图形密码点阵按照坐标拼接的一串数字密码。
+
+
+
+### 使用
+
+目录结构
+
+![](https://ooo.0o0.ooo/2017/06/19/594782f9e81d4.png)
+
+其中用红色框标注的是必须的文件，`styles.xml` 文件里有自定义的`declare-styleable`，下划线标注的两个类是工具类，可以移植到相关的类中进行调用。`shape_circle.xml` 文件是自定义view的每个点的资源drawable，可以自定义。
+
+
+
+### 小结
+
+写博客的时候又回顾了一遍代码，整体看上去还是有点乱。但是边写的过程中也边顺带着优化了一些不足的地方。因为其实很多属性在自己的项目中没有用到，所以测试方面可能有所不足，有机会我会把所有的定制属性都使用一遍，找到不足的地方改正它。这篇博客在档案留存的同时，也是告诫自己养成多记录的好习惯（还是太懒，这一篇都差点没有顺产）。代码和逻辑肯定还有很多不足的地方，也希望大家多提意见，感谢！
+
+
+
+### TODO 
+
+- [ ] 在`onMesured()` 方法中将view 的width 和height 设置成相等——两者中小的那个，以期将其设置成正方形，调用`setMesuredDimension()` 方法未生效
+
+      ![](https://ooo.0o0.ooo/2017/06/16/594335ab2856f.gif)
+
+      ​
