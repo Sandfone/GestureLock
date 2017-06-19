@@ -357,7 +357,5 @@ public interface GestureEvent {
 ### TODO 
 
 - [ ] 在`onMesured()` 方法中将view 的width 和height 设置成相等——两者中小的那个，以期将其设置成正方形，调用`setMesuredDimension()` 方法未生效
+  ![](https://ooo.0o0.ooo/2017/06/16/594335ab2856f.gif)
 
-      ![](https://ooo.0o0.ooo/2017/06/16/594335ab2856f.gif)
-
-      ​
