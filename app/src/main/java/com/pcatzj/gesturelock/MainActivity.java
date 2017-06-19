@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String mPassword = "";
 
-    private final int authorityTimes = 3;
+    private final int authorityTimes = 2;
     private Button mBtnReset;
 
     @Override
@@ -86,15 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case CREATE_NOT_SAME_AS_FIRST_TIMES:
                 Toast.makeText(this, "手势密码和第一次不同", Toast.LENGTH_SHORT).show();
                 break;
-            case CREATE_SUCCESSFUL:
-                Toast.makeText(this, "创建手势密码成功", Toast.LENGTH_SHORT).show();
-                mGestureLockView.setVisibility(View.GONE);
-                mGestureLockPreviewView.setVisibility(View.GONE);
-                mGestureLockPreviewView.setModePreview("");
-                if (mBtnReset.getVisibility() == View.VISIBLE) {
-                    mBtnReset.setVisibility(View.GONE);
-                }
-                break;
         }
     }
 
@@ -112,8 +103,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void storePassword(String password) {
+    public void onGestureCreateSuccessful(String password) {
         mPassword = password;
+
+        Toast.makeText(this, "创建手势密码成功", Toast.LENGTH_SHORT).show();
+        mGestureLockView.setVisibility(View.GONE);
+        mGestureLockPreviewView.setVisibility(View.GONE);
+        mGestureLockPreviewView.setModePreview("");
+        if (mBtnReset.getVisibility() == View.VISIBLE) {
+            mBtnReset.setVisibility(View.GONE);
+        }
     }
 
     @Override

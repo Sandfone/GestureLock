@@ -598,9 +598,7 @@ public class GestureLockView extends View {
             if (mVerifyTimes <= 0) {
                 if (mGestureEvent != null) {
                     // 存储密码
-                    mGestureEvent.storePassword(password);
-                    // 传递手势密码创建成功的回调
-                    mGestureEvent.onGestureCreate(GestureEvent.CREATE_SUCCESSFUL);
+                    mGestureEvent.onGestureCreateSuccessful(password);
                 }
             }
         } else {
@@ -720,17 +718,16 @@ public class GestureLockView extends View {
         int AUTHORITY_NOT_EXACTLY = 0x001;
         int AUTHORITY_EXACTLY = 0x002;
 
-        int CREATE_SUCCESSFUL = 0x011;
-        int CREATE_NOT_SAME_AS_FIRST_TIMES = 0x012;
-        int CREATE_CHECK_POINT_NOT_ENOUGH = 0x013;
+        int CREATE_NOT_SAME_AS_FIRST_TIMES = 0x011;
+        int CREATE_CHECK_POINT_NOT_ENOUGH = 0x012;
 
         void onGestureAuthority(int authority);
 
         void onGestureCreate(int create);
 
-        void onGestureCreateEffective(int leftSteps, String password);
+        void onGestureCreateSuccessful(String password);
 
-        void storePassword(String password);
+        void onGestureCreateEffective(int leftSteps, String password);
 
         boolean verifyPassword(String password);
 
