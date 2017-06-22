@@ -8,24 +8,4 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <declare-styleable name="GestureLockView">
-        <attr name="countSide" format="integer"/>
-        <attr name="minEffectiveLockCount" format="integer"/>
-        <attr name="drawingColor" format="color"/>
-        <attr name="effectiveColor" format="color"/>
-        <attr name="noneffectiveColor" format="color"/>
-        <attr name="onlyCheckUnderTouch" format="boolean"/>
-        <attr name="showLine" format="boolean"/>
-        <attr name="lineWidth" format="dimension"/>
-        <attr name="lock" format="reference"/>
-        <attr name="lockChecked" format="reference"/>
-        <attr name="lockBoardLength" format="dimension"/>
-        <attr name="drawAnchorPoint" format="boolean"/>
-        <attr name="drawAnchorShadow" format="boolean"/>
-        <attr name="anchorShadowRadius" format="dimension"/>
-        <attr name="anchorRadius" format="dimension"/>
-        <attr name="durationPatternDisappear" format="integer"/>
-        <attr name="durationErrorPatternDisappear" format="integer"/>
-    </declare-styleable>
-
 </resources>
