@@ -19,12 +19,11 @@
         <attr name="lineWidth" format="dimension"/>
         <attr name="lock" format="reference"/>
         <attr name="lockChecked" format="reference"/>
-        <attr name="lockWidth" format="dimension"/>
-        <attr name="lockHeight" format="dimension"/>
+        <attr name="lockBoardLength" format="dimension"/>
         <attr name="drawAnchorPoint" format="boolean"/>
         <attr name="drawAnchorShadow" format="boolean"/>
         <attr name="anchorShadowRadius" format="dimension"/>
-        <attr name="checkedCircleRadius" format="dimension"/>
+        <attr name="anchorRadius" format="dimension"/>
         <attr name="durationPatternDisappear" format="integer"/>
         <attr name="durationErrorPatternDisappear" format="integer"/>
     </declare-styleable>

@@ -57,7 +57,7 @@ public class GestureLockView extends View {
     // 触控点坐标记录变量
     private float mTouchPointX = -1, mTouchPointY = -1;
     // 点与点的最小间隔
-    private int mMinSpace = DisplayUtils.dip2px(getContext(), 4);
+    private final int mMinSpace = DisplayUtils.dip2px(getContext(), 4);
 
     /**
      * 属性变量
@@ -88,19 +88,17 @@ public class GestureLockView extends View {
     // Lock图案
     private Drawable mLockDrawable;
     private StateListDrawable mLockStateListDrawable;
-    // 图标宽度
-    private int mLockWidth;
-    // 图标高度
-    private int mLockHeight;
+    // 图标边长
+    private int mLockBoardLength = DisplayUtils.dip2px(getContext(), 64);
     // Lock的长
     // 是否在每个checked的点位置画一个圆
     private boolean mDrawAnchorPoint = false;
     // 是否绘制锚点阴影
     private boolean mDrawAnchorShadow = false;
     // 锚点阴影的半径
-    private int mAnchorShadowRadius = DisplayUtils.dip2px(getContext(), 32);
-    // 每个点位置圆的半径
-    private float mCheckedCircleRadius = DisplayUtils.dip2px(getContext(), 16);
+    private int mAnchorShadowRadius;
+    // 每个点位置实心锚点的半径
+    private float mAnchorRadius;
 
     // 是否可进行手势操作（针对PreviewMode）
     private boolean mTouchable = true;
@@ -132,6 +130,7 @@ public class GestureLockView extends View {
     public GestureLockView(Context context) {
         super(context);
         init();
+        initValues();
     }
 
     public GestureLockView(Context context, @Nullable AttributeSet attrs) {
@@ -153,16 +152,14 @@ public class GestureLockView extends View {
         mLineWidthDp = ta.getDimensionPixelSize(R.styleable.GestureLockView_lineWidth,
                         DisplayUtils.dip2px(mContext, 8));
         mLockDrawable = ta.getDrawable(R.styleable.GestureLockView_lock);
-        mLockWidth = ta.getDimensionPixelSize(R.styleable.GestureLockView_lockWidth,
-                        DisplayUtils.dip2px(mContext, 64));
-        mLockHeight = ta.getDimensionPixelSize(R.styleable.GestureLockView_lockHeight,
+        mLockBoardLength = ta.getDimensionPixelSize(R.styleable.GestureLockView_lockBoardLength,
                         DisplayUtils.dip2px(mContext, 64));
         mDrawAnchorPoint = ta.getBoolean(R.styleable.GestureLockView_drawAnchorPoint, false);
         mDrawAnchorShadow = ta.getBoolean(R.styleable.GestureLockView_drawAnchorShadow, false);
         mAnchorShadowRadius = ta.getDimensionPixelOffset(
-                        R.styleable.GestureLockView_anchorShadowRadius, DisplayUtils.dip2px(mContext, 32));
-        mCheckedCircleRadius = ta.getDimensionPixelSize(
-                        R.styleable.GestureLockView_checkedCircleRadius, DisplayUtils.dip2px(mContext, 16));
+                        R.styleable.GestureLockView_anchorShadowRadius, mLockBoardLength / 2);
+        mAnchorRadius = ta.getDimensionPixelSize(
+                        R.styleable.GestureLockView_anchorRadius, mLockBoardLength / 4);
         ta.recycle();
 
         init();
@@ -190,17 +187,17 @@ public class GestureLockView extends View {
               {@link Bitmap#createScaledBitmap(Bitmap, int, int, boolean)} 方法在指定的缩放宽高和原图
               相同时，会直接返回原图，所以调用{@link Bitmap#recycle()} 方法时可能会导致{@link NullPointerException}
              */
-            if (bitmap.getWidth() == mLockWidth && bitmap.getHeight() == mLockHeight) {
+            if (bitmap.getWidth() == mLockBoardLength && bitmap.getHeight() == mLockBoardLength) {
                 mLockBitmap = bitmap;
             } else {
-                mLockBitmap = Bitmap.createScaledBitmap(bitmap, mLockWidth, mLockHeight, true);
+                mLockBitmap = Bitmap.createScaledBitmap(bitmap, mLockBoardLength, mLockBoardLength, true);
                 bitmap.recycle();
             }
         }
 
         // 初始化单位
-//        mLockWidth = mLockBitmap.getWidth();
-//        mLockHeight = mLockBitmap.getHeight();
+//        mLockBoardLength = mLockBitmap.getWidth();
+//        mLockBoardLength = mLockBitmap.getHeight();
 
         // 初始化画笔
         mPaint = new Paint();
@@ -213,6 +210,11 @@ public class GestureLockView extends View {
         mCheckedOrder = new ArrayList<>();
 
         initPointCheckedStateArray();
+    }
+
+    private void initValues() {
+        mAnchorShadowRadius = mLockBoardLength / 2;
+        mAnchorRadius = mLockBoardLength / 4;
     }
 
     /**
@@ -247,10 +249,10 @@ public class GestureLockView extends View {
 
             BitmapDrawable drawable = (BitmapDrawable) mLockStateListDrawable.getCurrent();
             Bitmap bitmap = drawable.getBitmap();
-            if (bitmap.getWidth() == mLockWidth && bitmap.getHeight() == mLockHeight) {
+            if (bitmap.getWidth() == mLockBoardLength && bitmap.getHeight() == mLockBoardLength) {
                 mLockBitmap = bitmap;
             } else {
-                mLockBitmap = Bitmap.createScaledBitmap(bitmap, mLockWidth, mLockHeight, true);
+                mLockBitmap = Bitmap.createScaledBitmap(bitmap, mLockBoardLength, mLockBoardLength, true);
                 bitmap.recycle();
             }
         }
@@ -280,7 +282,7 @@ public class GestureLockView extends View {
         if (modeWidth == MeasureSpec.EXACTLY) {
             mWidth = Math.max(mWidth, getSuggestedMinimumWidth());
         } else if (modeWidth == MeasureSpec.AT_MOST) {
-            int width = mPaddingLeft + mPaddingRight + mLockWidth * mCountSide
+            int width = mPaddingLeft + mPaddingRight + mLockBoardLength * mCountSide
                             + mMinSpace * (mCountSide - 1);
             mWidth = Math.min(width, mWidth);
         }
@@ -289,7 +291,7 @@ public class GestureLockView extends View {
         if (modeHeight == MeasureSpec.EXACTLY) {
             mHeight = Math.max(mHeight, getSuggestedMinimumHeight());
         } else if (modeHeight == MeasureSpec.AT_MOST) {
-            int height = mPaddingTop + mPaddingBottom + mLockHeight * mCountSide
+            int height = mPaddingTop + mPaddingBottom + mLockBoardLength * mCountSide
                     + mMinSpace * (mCountSide - 1);
             mHeight = Math.min(height, mHeight);
         }
@@ -325,8 +327,8 @@ public class GestureLockView extends View {
         // 绘制各个点
         for (int i = 0; i < mCountSide; i++) {
             for (int j = 0; j < mCountSide; j++) {
-                int x = mPaddingLeft + mSpaceHorizontal * i + mLockWidth * i;
-                int y = mPaddingTop + mSpaceVertical * j + mLockHeight * j;
+                int x = mPaddingLeft + mSpaceHorizontal * i + mLockBoardLength * i;
+                int y = mPaddingTop + mSpaceVertical * j + mLockBoardLength * j;
 
                 if (mPointCheckedStateArray[i][j]) {
                     if (mLockDrawable != null) {
@@ -335,18 +337,18 @@ public class GestureLockView extends View {
                     // 绘制选中状态
                     setChecked(true);
                     canvas.drawBitmap(mLockBitmap, x, y, mPaint);
-                    // 绘制选中状态的点
+                    // 绘制选中状态的点的实心锚点
                     if (mDrawAnchorPoint) {
-                        canvas.drawCircle(x + mLockWidth / 2,
-                                y + mLockHeight / 2,
-                                mCheckedCircleRadius, mPaint);
+                        canvas.drawCircle(x + mLockBoardLength / 2,
+                                y + mLockBoardLength / 2,
+                                mAnchorRadius, mPaint);
                     }
 
-                    // 绘制阴影
-                    if (mDrawAnchorShadow) {
+                    // 绘制阴影（如果圆形阴影半径小于实心锚点的半径，则阴影效果将被覆盖，不再绘制阴影）
+                    if (mAnchorShadowRadius > mAnchorRadius && mDrawAnchorShadow) {
                         mPaint.setAlpha(100);
-                        canvas.drawCircle(x + mLockWidth / 2,
-                                y + mLockHeight / 2,
+                        canvas.drawCircle(x + mLockBoardLength / 2,
+                                y + mLockBoardLength / 2,
                                 mAnchorShadowRadius, mPaint);
                         mPaint.setAlpha(255);
                     }
@@ -445,10 +447,10 @@ public class GestureLockView extends View {
     private Point calculateItemCenterCoordinate(Point itemLocation) {
         int x = itemLocation.x;
         int y = itemLocation.y;
-        int minX = mPaddingLeft + mSpaceHorizontal * x + mLockWidth * x;
-        int maxX = mPaddingLeft + mSpaceHorizontal * x + mLockWidth * x + mLockWidth;
-        int minY = mPaddingTop + mSpaceVertical * y + mLockHeight * y;
-        int maxY = mPaddingTop + mSpaceVertical * y + mLockHeight * y + mLockHeight;
+        int minX = mPaddingLeft + mSpaceHorizontal * x + mLockBoardLength * x;
+        int maxX = mPaddingLeft + mSpaceHorizontal * x + mLockBoardLength * x + mLockBoardLength;
+        int minY = mPaddingTop + mSpaceVertical * y + mLockBoardLength * y;
+        int maxY = mPaddingTop + mSpaceVertical * y + mLockBoardLength * y + mLockBoardLength;
         int centerX = (minX + maxX) / 2;
         int centerY = (minY + maxY) / 2;
         return new Point(centerX, centerY);
@@ -458,11 +460,19 @@ public class GestureLockView extends View {
      * 计算各种参数数值
      */
     private void calculateValues() {
-        mLockWidth = mLockHeight = Math.max(mLockHeight, mLockWidth);
-        mSpaceHorizontal = (mWidth - mLockWidth * mCountSide - mPaddingLeft - mPaddingRight)
+        mLockBoardLength = mLockBoardLength = Math.max(mLockBoardLength, mLockBoardLength);
+        mSpaceHorizontal = (mWidth - mLockBoardLength * mCountSide - mPaddingLeft - mPaddingRight)
                         / (mCountSide - 1);
-        mSpaceVertical = (mHeight - mLockHeight * mCountSide - mPaddingTop - mPaddingBottom)
+        mSpaceVertical = (mHeight - mLockBoardLength * mCountSide - mPaddingTop - mPaddingBottom)
                         / (mCountSide - 1);
+
+        if (mWidth < mLockBoardLength * mCountSide + mMinSpace * (mCountSide -1)) {
+            mLockBoardLength = (mWidth - mMinSpace * (mCountSide - 1)) / mCountSide;
+        }
+
+        if (mHeight < mLockBoardLength * mCountSide + mMinSpace * (mCountSide -1)) {
+            mLockBoardLength = (mHeight - mMinSpace * (mCountSide - 1)) / mCountSide;
+        }
     }
 
     /**
@@ -474,10 +484,10 @@ public class GestureLockView extends View {
     private Point checkBox(float x, float y) {
         for (int i = 0; i < mCountSide; i++) {
             for (int j = 0; j < mCountSide; j++) {
-                int minX = mPaddingLeft + mSpaceHorizontal * i + mLockWidth * i;
-                int maxX = mPaddingLeft + mSpaceHorizontal * i + mLockWidth * i + mLockWidth;
-                int minY = mPaddingTop + mSpaceVertical * j + mLockHeight * j;
-                int maxY = mPaddingTop + mSpaceVertical * j + mLockHeight * j + mLockHeight;
+                int minX = mPaddingLeft + mSpaceHorizontal * i + mLockBoardLength * i;
+                int maxX = mPaddingLeft + mSpaceHorizontal * i + mLockBoardLength * i + mLockBoardLength;
+                int minY = mPaddingTop + mSpaceVertical * j + mLockBoardLength * j;
+                int maxY = mPaddingTop + mSpaceVertical * j + mLockBoardLength * j + mLockBoardLength;
 
                 RectF rectF = new RectF(minX, minY, maxX, maxY);
                 if (rectF.contains(x, y)) {

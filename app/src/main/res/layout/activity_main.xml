@@ -35,14 +35,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        app:checkedCircleRadius="8dp"
+        app:anchorRadius="8dp"
         app:drawAnchorPoint="true"
         app:effectiveColor="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/l_layout_button"
-        app:lockHeight="16dp"
-        app:lockWidth="16dp"
+        app:lockBoardLength="16dp"
         app:showLine="false"
         android:visibility="gone"/>
 
