@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Vibrator;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -87,6 +88,9 @@ public class GestureLockView extends View {
     private int mLineWidthDp = DisplayUtils.dip2px(getContext(), 8);
     // Lock图案
     private Drawable mLockDrawable;
+    // 默认Lock图案的resource id
+    @DrawableRes
+    private int mLockDrawableRes = R.drawable.shape_circle;
     private StateListDrawable mLockStateListDrawable;
     // 图标边长
     private int mLockBoardLength = DisplayUtils.dip2px(getContext(), 64);
@@ -180,7 +184,7 @@ public class GestureLockView extends View {
             bitmap = ((BitmapDrawable) mLockDrawable).getBitmap();
         } else {
             // 默认checkPoint 的背景
-            bitmap = ResourceUtils.getBitmap(mContext, R.drawable.shape_circle);
+            bitmap = ResourceUtils.getBitmap(mContext, mLockDrawableRes);
         }
         if (bitmap != null) {
             /*
@@ -460,7 +464,6 @@ public class GestureLockView extends View {
      * 计算各种参数数值
      */
     private void calculateValues() {
-        mLockBoardLength = mLockBoardLength = Math.max(mLockBoardLength, mLockBoardLength);
         mSpaceHorizontal = (mWidth - mLockBoardLength * mCountSide - mPaddingLeft - mPaddingRight)
                         / (mCountSide - 1);
         mSpaceVertical = (mHeight - mLockBoardLength * mCountSide - mPaddingTop - mPaddingBottom)
@@ -780,5 +783,240 @@ public class GestureLockView extends View {
             password += point.x + "" + point.y;
         }
         return password;
+    }
+
+    public int getCountSide() {
+        return mCountSide;
+    }
+
+    public int getMinEffectiveLockCount() {
+        return mMinEffectiveLockCount;
+    }
+
+    public int getDrawingColor() {
+        return mDrawingColor;
+    }
+
+    public int getEffectiveColor() {
+        return mEffectiveColor;
+    }
+
+    public int getNoneffectiveColor() {
+        return mNoneffectiveColor;
+    }
+
+    public long getDurationPatternDisappear() {
+        return mDurationPatternDisappear;
+    }
+
+    public long getDurationErrorPatternDisappear() {
+        return mDurationErrorPatternDisappear;
+    }
+
+    public boolean isOnlyCheckedUnderTouch() {
+        return mOnlyCheckedUnderTouch;
+    }
+
+    public boolean isShowLine() {
+        return mShowLine;
+    }
+
+    public int getLineWidthDp() {
+        return mLineWidthDp;
+    }
+
+    public Drawable getLockDrawable() {
+        return mLockDrawable;
+    }
+
+    public int getLockDrawableRes() {
+        return mLockDrawableRes;
+    }
+
+    public int getLockBoardLength() {
+        return mLockBoardLength;
+    }
+
+    public boolean isDrawAnchorPoint() {
+        return mDrawAnchorPoint;
+    }
+
+    public boolean isDrawAnchorShadow() {
+        return mDrawAnchorShadow;
+    }
+
+    public int getAnchorShadowRadius() {
+        return mAnchorShadowRadius;
+    }
+
+    public float getAnchorRadius() {
+        return mAnchorRadius;
+    }
+
+    public static class Builder {
+        private Context context;
+
+        /**
+         * 属性变量
+         */
+        // 控件边长（item数量）
+        private int countSide = 3;
+        // 最少的点生效数
+        private int minEffectiveLockCount = 4;
+        // 绘制图形时的线条颜色
+        @ColorInt
+        private int drawingColor = 0xffffff00;
+        // 绘制完成后的线条颜色
+        @ColorInt
+        private int effectiveColor = 0xff00ff00;
+        // 图形不符合最低点数或者错误时的错误色
+        @ColorInt
+        private int noneffectiveColor = 0xffff0000;
+        // 图形锁图案自动消失时间.0为立马消失，小于0为永不自动消失
+        private long durationPatternDisappear = 1_000;
+        // 图形锁错误时图案的自动消失时间.0为立马消失，小于0为永不自动消失
+        private long durationErrorPatternDisappear = 1_000;
+        // 是否只有触控点接触到每个可checked的Lock时才会checked
+        private boolean onlyCheckedUnderTouch = true;
+        // 是否绘制点与点之间的线条
+        private boolean showLine = true;
+        // 线的宽度（单位：dp）
+        private int lineWidthDp;
+        // Lock图案
+        private Drawable lockDrawable;
+        @DrawableRes
+        private int lockDrawableRes = R.drawable.shape_circle;
+        // 图标边长
+        private int lockBoardLength;
+        // Lock的长
+        // 是否在每个checked的点位置画一个圆
+        private boolean drawAnchorPoint = false;
+        // 是否绘制锚点阴影
+        private boolean drawAnchorShadow = false;
+        // 锚点阴影的半径
+        private int anchorShadowRadius;
+        // 每个点位置实心锚点的半径
+        private int anchorRadius;
+
+        public Builder(Context context) {
+            this.context = context;
+            initValues();
+        }
+
+        private void initValues() {
+            lineWidthDp = DisplayUtils.dip2px(context, 8);
+            lockBoardLength = DisplayUtils.dip2px(context, 64);
+
+            anchorShadowRadius = lockBoardLength / 2;
+            anchorRadius = lockBoardLength / 4;
+        }
+
+        public Builder countSide(int countSide) {
+            this.countSide = countSide;
+            return this;
+        }
+
+        public Builder minEffectiveLockCount(int minEffectiveLockCount) {
+            this.minEffectiveLockCount = minEffectiveLockCount;
+            return this;
+        }
+
+        public Builder drawingColor(@ColorInt int drawingColor) {
+            this.drawingColor = drawingColor;
+            return this;
+        }
+
+        public Builder effectiveColor(@ColorInt int effectiveColor) {
+            this.effectiveColor = effectiveColor;
+            return this;
+        }
+
+        public Builder noneffectiveColor(@ColorInt int noneffectiveColor) {
+            this.noneffectiveColor = noneffectiveColor;
+            return this;
+        }
+
+        public Builder durationPatternDisappear(long durationPatternDisappear) {
+            this.durationPatternDisappear = durationPatternDisappear;
+            return this;
+        }
+
+        public Builder durationErrorPatternDisappear(long durationErrorPatternDisappear) {
+            this.durationErrorPatternDisappear = durationErrorPatternDisappear;
+            return this;
+        }
+
+        public Builder onlyCheckedUnderTouch(boolean onlyCheckedUnderTouch) {
+            this.onlyCheckedUnderTouch = onlyCheckedUnderTouch;
+            return this;
+        }
+
+        public Builder showLine(boolean showLine) {
+            this.showLine = showLine;
+            return this;
+        }
+
+        public Builder lineWidthDp(int lineWidthDp) {
+            this.lineWidthDp = lineWidthDp;
+            return this;
+        }
+
+        public Builder lockDrawable(Drawable lockDrawable) {
+            this.lockDrawable = lockDrawable;
+            return this;
+        }
+
+        public Builder lockDrawable(@DrawableRes int lockDrawableRes) {
+            this.lockDrawableRes = lockDrawableRes;
+            return this;
+        }
+
+        public Builder lockBoardLength(int lockBoardLength) {
+            this.lockBoardLength = lockBoardLength;
+            return this;
+        }
+
+        public Builder drawAnchorPoint(boolean drawAnchorPoint) {
+            this.drawAnchorPoint = drawAnchorPoint;
+            return this;
+        }
+
+        public Builder drawAnchorShadow(boolean drawAnchorShadow) {
+            this.drawAnchorShadow = drawAnchorShadow;
+            return this;
+        }
+
+        public Builder anchorShadowRadius(int anchorShadowRadius) {
+            this.anchorShadowRadius = anchorShadowRadius;
+            return this;
+        }
+
+        public Builder anchorRadius(int anchorRadius) {
+            this.anchorRadius = anchorRadius;
+            return this;
+        }
+
+        public GestureLockView build() {
+            GestureLockView gestureLockView = new GestureLockView(context);
+            gestureLockView.mCountSide = countSide;
+            gestureLockView.mMinEffectiveLockCount = minEffectiveLockCount;
+            gestureLockView.mDrawingColor = drawingColor;
+            gestureLockView.mEffectiveColor = effectiveColor;
+            gestureLockView.mNoneffectiveColor = noneffectiveColor;
+            gestureLockView.mDurationPatternDisappear = durationPatternDisappear;
+            gestureLockView.mDurationErrorPatternDisappear = durationErrorPatternDisappear;
+            gestureLockView.mOnlyCheckedUnderTouch = onlyCheckedUnderTouch;
+            gestureLockView.mShowLine = showLine;
+            gestureLockView.mLineWidthDp = lineWidthDp;
+            gestureLockView.mLockDrawable = lockDrawable;
+            gestureLockView.mLockDrawableRes = lockDrawableRes;
+            gestureLockView.mLockBoardLength = lockBoardLength;
+            gestureLockView.mDrawAnchorPoint = drawAnchorPoint;
+            gestureLockView.mDrawAnchorShadow = drawAnchorShadow;
+            gestureLockView.mAnchorShadowRadius = anchorShadowRadius;
+            gestureLockView.mAnchorRadius = anchorRadius;
+
+            return gestureLockView;
+        }
     }
 }
