@@ -1,8 +1,8 @@
-# 自定义view--手势密码[^1]
+# 自定义view--手势密码
 
 
 
-###### 项目地址：https://github.com/pcatzj/GestureLock
+###### 项目地址：https://github.com/pcatzj/GestureLock [^1]
 
 
 
