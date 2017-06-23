@@ -1,4 +1,4 @@
-package com.pcatzj.gesturelock.view;
+package com.pcatzj.gesturelockview.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,9 +19,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.pcatzj.gesturelock.R;
-import com.pcatzj.gesturelock.util.DisplayUtils;
-import com.pcatzj.gesturelock.util.ResourceUtils;
+import com.pcatzj.gesturelockview.R;
+import com.pcatzj.gesturelockview.util.DisplayUtils;
+import com.pcatzj.gesturelockview.util.ResourceUtils;
 
 import java.util.ArrayList;
 import java.util.List;

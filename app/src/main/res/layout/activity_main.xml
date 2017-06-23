@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:glv="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,23 +30,23 @@
             android:text="@string/verify_gesture_password"/>
     </LinearLayout>
 
-    <com.pcatzj.gesturelock.view.GestureLockView
+    <com.pcatzj.gesturelockview.view.GestureLockView
         android:id="@+id/view_gesture_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="32dp"
-        app:anchorRadius="8dp"
-        app:drawAnchorPoint="true"
-        app:effectiveColor="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/l_layout_button"
-        app:lockBoardLength="16dp"
-        app:showLine="false"
+        glv:anchorRadius="8dp"
+        glv:drawAnchorPoint="true"
+        glv:effectiveColor="@color/colorAccent"
+        glv:lockBoardLength="16dp"
+        glv:showLine="false"
         android:visibility="gone"/>
 
-    <com.pcatzj.gesturelock.view.GestureLockView
+    <com.pcatzj.gesturelockview.view.GestureLockView
         android:id="@+id/view_gesture"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -53,18 +54,18 @@
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        app:drawAnchorPoint="true"
-        app:drawAnchorShadow="true"
-        app:drawingColor="@color/colorAccent"
-        app:effectiveColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_gesture_preview"
-        app:lineWidth="2dp"
-        app:minEffectiveLockCount="4"
-        app:noneffectiveColor="@android:color/holo_red_dark"
-        app:onlyCheckUnderTouch="false"
+        glv:drawAnchorPoint="true"
+        glv:drawAnchorShadow="true"
+        glv:drawingColor="@color/colorAccent"
+        glv:effectiveColor="@color/colorAccent"
+        glv:lineWidth="2dp"
+        glv:minEffectiveLockCount="4"
+        glv:noneffectiveColor="@android:color/holo_red_dark"
+        glv:onlyCheckUnderTouch="false"
         android:visibility="gone"/>
 
     <Button

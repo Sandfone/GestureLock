@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.pcatzj.gesturelock.view.GestureLockView;
+import com.pcatzj.gesturelockview.view.GestureLockView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, GestureLockView.GestureEvent {
 
@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onGestureAuthority(int authority) {
         switch (authority) {
-            case AUTHORITY_EXACTLY:
+            case GestureLockView.GestureEvent.AUTHORITY_EXACTLY:
                 Toast.makeText(this, "手势密码验证成功", Toast.LENGTH_SHORT).show();
                 mGestureLockView.setVisibility(View.GONE);
                 break;
-            case AUTHORITY_NOT_EXACTLY:
+            case GestureLockView.GestureEvent.AUTHORITY_NOT_EXACTLY:
                 Toast.makeText(this, "手势密码不正确", Toast.LENGTH_SHORT).show();
                 break;
         }
@@ -80,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onGestureCreate(int create) {
         switch (create) {
-            case CREATE_CHECK_POINT_NOT_ENOUGH:
+            case GestureLockView.GestureEvent.CREATE_CHECK_POINT_NOT_ENOUGH:
                 Toast.makeText(this, "连接点数过少", Toast.LENGTH_SHORT).show();
                 break;
-            case CREATE_NOT_SAME_AS_FIRST_TIMES:
+            case GestureLockView.GestureEvent.CREATE_NOT_SAME_AS_FIRST_TIMES:
                 Toast.makeText(this, "手势密码和第一次不同", Toast.LENGTH_SHORT).show();
                 break;
         }

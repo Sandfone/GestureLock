@@ -1,4 +1,4 @@
-package com.pcatzj.gesturelock.util;
+package com.pcatzj.gesturelockview.util;
 
 import android.content.Context;
 
