@@ -1,4 +1,4 @@
-# 自定义view--手势密码
+# 自定义view--手势密码[^1]
 
 
 
@@ -342,9 +342,9 @@ public interface GestureEvent {
 
 目录结构
 
-![](https://ooo.0o0.ooo/2017/06/19/594782f9e81d4.png)
+![](https://ooo.0o0.ooo/2017/06/23/594cc618af2a6.png)
 
-其中用红色框标注的是必须的文件，`styles.xml` 文件里有自定义的`declare-styleable`，下划线标注的两个类是工具类，可以移植到相关的类中进行调用。`shape_circle.xml` 文件是自定义view的每个点的资源drawable，可以自定义。
+`shape_circle.xml` 文件是自定义view的每个点的资源drawable，可以自定义。
 
 
 
@@ -358,7 +358,7 @@ public interface GestureEvent {
 
 - [ ] 在`onMesured()` 方法中将view 的width 和height 设置成相等——两者中小的那个，以期将其设置成正方形，调用`setMesuredDimension()` 方法未生效
   ![ji](https://ooo.0o0.ooo/2017/06/16/594335ab2856f.gif)
-- [ ] getter and setter
+- [x] getter and setter
 - [x] `LockHeight` 和`LockWidth` 以及`checkedCircleRadius` 属性的默认值计算
 
-
+[^1]: 此文档中展示的代码或者内容可能不是最新版本，一切以github仓库为准。
